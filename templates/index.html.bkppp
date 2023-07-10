@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Abrir Câmera iOS</title>
+</head>
+<body>
+    <h1>Abrir Câmera iOS</h1>
+    <form action="/capture" method="POST">
+        <input type="file" accept="image/*" capture="camera" id="cameraInput">
+        <button type="submit">Capturar</button>
+    </form>
+
+    <script>
+        // Captura o evento de envio do formulário
+        document.querySelector('form').addEventListener('submit', function(event) {
+            event.preventDefault(); // Impede o envio do formulário
+            var fileInput = document.getElementById('cameraInput');
+            var file = fileInput.files[0];
+            var reader = new FileReader();
+            reader.onload = function(e) {
+                var image = new Image();
+                image.src = e.target.result;
+                document.body.appendChild(image);
+            }
+            reader.readAsDataURL(file);
+        });
+    </script>
+</body>
+</html>

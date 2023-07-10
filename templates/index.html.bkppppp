@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Abrir Câmera iOS</title>
+</head>
+<body>
+    <h1>Abrir Câmera iOS</h1>
+    <form action="/capture" method="POST" enctype="multipart/form-data">
+        <input type="file" accept="image/*" capture="camera" id="cameraInput" name="file">
+        <button type="submit">Capturar</button>
+    </form>
+
+    <script>
+        // Captura o evento de envio do formulário
+        document.querySelector('form').addEventListener('submit', function(event) {
+            event.preventDefault(); // Impede o envio do formulário
+            var fileInput = document.getElementById('cameraInput');
+            var file = fileInput.files[0];
+            var reader = new FileReader();
+            reader.onload = function(e) {
+                var image = new Image();
+                image.src = e.target.result;
+                document.body.appendChild(image);
+
+                // Envia o arquivo para o Flask
+                var formData = new FormData();
+                formData.append('file', file);
+
+                fetch('/capture', {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => response.text())
+                .then(data => {
+                    console.log(data); // Exibe a resposta do Flask no console
+                })
+                .catch(error => {
+                    console.error('Erro:', error);
+                });
+            }
+            reader.readAsDataURL(file);
+        });
+
+    </script>
+</body>
+</html>
